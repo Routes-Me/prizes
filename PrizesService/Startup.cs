@@ -57,13 +57,6 @@ namespace PrizesService
                 return dbContext;
             });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("Vehicle", policy => policy.RequireRole("Technician"));
-            //    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-            //});
-
-            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -128,9 +121,14 @@ namespace PrizesService
 
             //Common Services
             services.AddScoped<ICandidatesRepository, CandidatesRepository>();
+            services.AddScoped<IDrawsRepository, DrawsRepository>();
+            services.AddScoped<INationalitiesRepository, NationalitiesRepository>();
+            services.AddScoped<IObfuscationRepository, ObfuscationRepository>();
 
             //Data Access Services
             services.AddScoped<ICandidatesDataAccessRepository, CandidatesDataAccessRepository>();
+            services.AddScoped<IDrawsDataAccessRepository, DrawsDataAccessRepository>();
+            services.AddScoped<INationalitiesDataAccessRepository, NationalitiesDataAccessRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

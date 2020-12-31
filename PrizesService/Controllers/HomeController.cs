@@ -12,16 +12,12 @@ namespace PrizesService.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        [Obsolete]
-        public readonly IHostingEnvironment _hostingEnv;
-
-        [Obsolete]
-        public HomeController(IHostingEnvironment hostingEnv)
+        private readonly IWebHostEnvironment _hostingEnv;
+        public HomeController(IWebHostEnvironment hostingEnv)
         {
             _hostingEnv = hostingEnv;
         }
         [HttpGet]
-        [Obsolete]
         public string Get()
         {
             return "Prizes service started successfully. Environment - " + _hostingEnv.EnvironmentName + "";

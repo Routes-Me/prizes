@@ -63,12 +63,18 @@ namespace PrizesService.Models
     public class CandidateResponse : Response
     {
         public Pagination pagination { get; set; }
-        public List<CandidatesModel> data { get; set; }
+        public List<CandidatesGetModel> data { get; set; }
     }
 
     public class NationalitiesResponse : Response
     {
         public Pagination pagination { get; set; }
         public List<NationalitiesModel> data { get; set; }
+    }
+
+    public class DrawsResponse : Response
+    {
+        public Pagination pagination { get; set; }
+        public List<DrawsModel> data { get; set; }
     }
 }

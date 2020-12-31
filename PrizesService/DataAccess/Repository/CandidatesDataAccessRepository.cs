@@ -59,7 +59,7 @@ namespace PrizesService.DataAccess.Repository
         {
             int totalCount = 0;
             CandidateResponse response = new CandidateResponse();
-            List<CandidatesModel> candidatesList = new List<CandidatesModel>();
+            List<CandidatesGetModel> candidatesList = new List<CandidatesGetModel>();
             int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
@@ -68,11 +68,10 @@ namespace PrizesService.DataAccess.Repository
             int candidatesIdDecrypted = _obfuscationRepository.IdDecryption(candidatesId);
             if (candidatesIdDecrypted == 0)
             {
-
                 candidatesList = (from candidates in _context.Candidates
                                   join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                                   where drawsCandidates.DrawId == drawsIdDecrypted
-                                  select new CandidatesModel()
+                                  select new CandidatesGetModel()
                                   {
                                       CandidateId = _obfuscationRepository.IdEncryption(candidates.CandidateId),
                                       Name = candidates.Name,
@@ -85,7 +84,7 @@ namespace PrizesService.DataAccess.Repository
                 totalCount = (from candidates in _context.Candidates
                               join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                               where drawsCandidates.DrawId == drawsIdDecrypted
-                              select new CandidatesModel() { }).ToList().Count;
+                              select new CandidatesGetModel() { }).ToList().Count;
 
             }
             else
@@ -93,7 +92,7 @@ namespace PrizesService.DataAccess.Repository
                 candidatesList = (from candidates in _context.Candidates
                                   join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                                   where drawsCandidates.DrawId == drawsIdDecrypted && candidates.CandidateId == candidatesIdDecrypted
-                                  select new CandidatesModel()
+                                  select new CandidatesGetModel()
                                   {
                                       CandidateId = _obfuscationRepository.IdEncryption(candidates.CandidateId),
                                       Name = candidates.Name,
@@ -106,7 +105,7 @@ namespace PrizesService.DataAccess.Repository
                 totalCount = (from candidates in _context.Candidates
                               join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                               where drawsCandidates.DrawId == drawsIdDecrypted && candidates.CandidateId == candidatesIdDecrypted
-                              select new CandidatesModel() { }).ToList().Count;
+                              select new CandidatesGetModel() { }).ToList().Count;
             }
 
             var page = new Pagination
@@ -173,7 +172,7 @@ namespace PrizesService.DataAccess.Repository
                 Common.ThrowException(CommonMessage.CandidateNotFound, StatusCodes.Status404NotFound);
 
             int nationalityIdDecrypted = _obfuscationRepository.IdDecryption(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Include(x => x.CandidatesNationalities).Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
+            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
             if (nationalities == null)
                 Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 

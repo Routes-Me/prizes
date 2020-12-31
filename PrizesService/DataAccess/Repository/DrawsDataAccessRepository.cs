@@ -23,12 +23,67 @@ namespace PrizesService.DataAccess.Repository
         }
         public dynamic DeleteDraws(string drawsId)
         {
-            throw new NotImplementedException();
+            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
+            var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
+            if (draws == null)
+                Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
+
+            _context.Draws.Remove(draws);
+            _context.SaveChanges();
+            return ReturnResponse.SuccessResponse(CommonMessage.DrawsDelete, false);
         }
 
         public dynamic GetDraws(string drawsId, Pagination pageInfo)
         {
-            throw new NotImplementedException();
+            int totalCount = 0;
+            DrawsResponse response = new DrawsResponse();
+            List<DrawsModel> drawsList = new List<DrawsModel>();
+            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
+            if (drawsIdDecrypted == 0)
+            {
+                drawsList = (from draws in _context.Draws
+                             select new DrawsModel()
+                             {
+                                 DrawId = _obfuscationRepository.IdEncryption(draws.DrawId),
+                                 StartAt = draws.StartAt,
+                                 EndAt = draws.EndAt,
+                                 Name = draws.Name,
+                                 Status = draws.Status,
+                                 CreatedAt = draws.CreatedAt
+                             }).AsEnumerable().OrderBy(a => a.DrawId).Skip((pageInfo.offset - 1) * pageInfo.limit).Take(pageInfo.limit).ToList();
+
+                totalCount = _context.Draws.Count();
+            }
+            else
+            {
+                drawsList = (from draws in _context.Draws
+                             where draws.DrawId == drawsIdDecrypted
+                             select new DrawsModel()
+                             {
+                                 DrawId = _obfuscationRepository.IdEncryption(draws.DrawId),
+                                 StartAt = draws.StartAt,
+                                 EndAt = draws.EndAt,
+                                 Name = draws.Name,
+                                 Status = draws.Status,
+                                 CreatedAt = draws.CreatedAt
+                             }).AsEnumerable().OrderBy(a => a.DrawId).Skip((pageInfo.offset - 1) * pageInfo.limit).Take(pageInfo.limit).ToList();
+
+                totalCount = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).Count();
+            }
+
+            var page = new Pagination
+            {
+                offset = pageInfo.offset,
+                limit = pageInfo.limit,
+                total = totalCount
+            };
+
+            response.status = true;
+            response.message = CommonMessage.DrawsRetrived;
+            response.pagination = page;
+            response.data = drawsList;
+            response.statusCode = StatusCodes.Status200OK;
+            return response;
         }
 
         public dynamic InsertDraws(DrawsModel drawsModel)
