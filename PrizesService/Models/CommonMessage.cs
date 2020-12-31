@@ -31,7 +31,15 @@ namespace PrizesService.Models
         public static string CandidateUpdate = "Candidates updated successfully.";
         public static string CandidateDelete = "Candidates deleted successfully.";
 
-        
+
+        public static string SpinNotFound = "Spin not found.";
+        public static string SpinExist = "Spin already exist.";
+        public static string SpinRetrived = "Spin retrived successfully.";
+        public static string SpinInsert = "Spin inserted successfully.";
+        public static string SpinUpdate = "Spin updated successfully.";
+        public static string SpinDelete = "Spin deleted successfully.";
+
+
 
     }
 }

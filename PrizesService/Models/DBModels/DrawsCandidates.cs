@@ -7,6 +7,7 @@ namespace PrizesService.Models.DBModels
     {
         public int DrawId { get; set; }
         public int CandidateId { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public virtual Candidates Candidate { get; set; }
         public virtual Draws Draw { get; set; }

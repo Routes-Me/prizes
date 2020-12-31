@@ -124,11 +124,13 @@ namespace PrizesService
             services.AddScoped<IDrawsRepository, DrawsRepository>();
             services.AddScoped<INationalitiesRepository, NationalitiesRepository>();
             services.AddScoped<IObfuscationRepository, ObfuscationRepository>();
+            services.AddScoped<ISpinnersRepository, SpinnersRepository>();
 
             //Data Access Services
             services.AddScoped<ICandidatesDataAccessRepository, CandidatesDataAccessRepository>();
             services.AddScoped<IDrawsDataAccessRepository, DrawsDataAccessRepository>();
             services.AddScoped<INationalitiesDataAccessRepository, NationalitiesDataAccessRepository>();
+            services.AddScoped<ISpinnersDataAccessRepository, SpinnersDataAccessRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

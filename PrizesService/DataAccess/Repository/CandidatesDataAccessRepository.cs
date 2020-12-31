@@ -148,6 +148,7 @@ namespace PrizesService.DataAccess.Repository
             DrawsCandidates drawsCandidates = new DrawsCandidates();
             drawsCandidates.DrawId = drawsIdDecrypted;
             drawsCandidates.CandidateId = candidates.CandidateId;
+            drawsCandidates.CreatedAt = DateTime.Now;
             _context.DrawsCandidates.Add(drawsCandidates);
             _context.SaveChanges();
 

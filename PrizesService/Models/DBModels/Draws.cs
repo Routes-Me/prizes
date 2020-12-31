@@ -8,7 +8,7 @@ namespace PrizesService.Models.DBModels
         public Draws()
         {
             DrawsCandidates = new HashSet<DrawsCandidates>();
-            Spinners = new HashSet<Spinners>();
+            Spins = new HashSet<Spins>();
         }
 
         public int DrawId { get; set; }
@@ -19,6 +19,6 @@ namespace PrizesService.Models.DBModels
         public DateTime? CreatedAt { get; set; }
 
         public virtual ICollection<DrawsCandidates> DrawsCandidates { get; set; }
-        public virtual ICollection<Spinners> Spinners { get; set; }
+        public virtual ICollection<Spins> Spins { get; set; }
     }
 }

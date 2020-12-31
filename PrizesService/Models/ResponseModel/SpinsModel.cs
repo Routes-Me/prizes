@@ -5,11 +5,17 @@ using System.Threading.Tasks;
 
 namespace PrizesService.Models.ResponseModel
 {
-    public class SpinnersModel
+    public class SpinsModel
     {
         public string SpinId { get; set; }
         public string OfficerId { get; set; }
         public string DrawId { get; set; }
         public DateTime? CreatedAt { get; set; }
+    }
+
+    public class PostSpinsModel
+    {
+        public string SpinId { get; set; }
+        public string OfficerId { get; set; }
     }
 }

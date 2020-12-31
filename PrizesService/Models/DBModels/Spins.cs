@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace PrizesService.Models.DBModels
 {
-    public partial class Spinners
+    public partial class Spins
     {
-        public Spinners()
+        public Spins()
         {
             DrawWinners = new HashSet<DrawWinners>();
         }

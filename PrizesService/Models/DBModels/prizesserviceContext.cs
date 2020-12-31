@@ -21,9 +21,9 @@ namespace PrizesService.Models.DBModels
         public virtual DbSet<Draws> Draws { get; set; }
         public virtual DbSet<DrawsCandidates> DrawsCandidates { get; set; }
         public virtual DbSet<Nationalities> Nationalities { get; set; }
-        public virtual DbSet<Spinners> Spinners { get; set; }
+        public virtual DbSet<Spins> Spins { get; set; }
 
-
+  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Candidates>(entity =>
@@ -107,17 +107,21 @@ namespace PrizesService.Models.DBModels
 
                 entity.Property(e => e.CandidateId).HasColumnName("candidate_id");
 
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasColumnType("timestamp");
+
                 entity.Property(e => e.SpinId).HasColumnName("spin_id");
 
                 entity.HasOne(d => d.Candidate)
                     .WithMany(p => p.DrawWinners)
                     .HasForeignKey(d => d.CandidateId)
-                    .HasConstraintName("draw_winners_ibfk_1");
+                    .HasConstraintName("draw_winners_ibfk_2");
 
                 entity.HasOne(d => d.Spin)
                     .WithMany(p => p.DrawWinners)
                     .HasForeignKey(d => d.SpinId)
-                    .HasConstraintName("draw_winners_ibfk_2");
+                    .HasConstraintName("draw_winners_ibfk_1");
             });
 
             modelBuilder.Entity<Draws>(entity =>
@@ -169,6 +173,10 @@ namespace PrizesService.Models.DBModels
 
                 entity.Property(e => e.CandidateId).HasColumnName("candidate_id");
 
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnName("created_at")
+                    .HasColumnType("timestamp");
+
                 entity.HasOne(d => d.Candidate)
                     .WithMany(p => p.DrawsCandidates)
                     .HasForeignKey(d => d.CandidateId)
@@ -198,12 +206,12 @@ namespace PrizesService.Models.DBModels
                     .HasCollation("utf8mb4_0900_ai_ci");
             });
 
-            modelBuilder.Entity<Spinners>(entity =>
+            modelBuilder.Entity<Spins>(entity =>
             {
                 entity.HasKey(e => e.SpinId)
                     .HasName("PRIMARY");
 
-                entity.ToTable("spinners");
+                entity.ToTable("spins");
 
                 entity.HasIndex(e => e.DrawId)
                     .HasName("draw_id");
@@ -219,9 +227,9 @@ namespace PrizesService.Models.DBModels
                 entity.Property(e => e.OfficerId).HasColumnName("officer_id");
 
                 entity.HasOne(d => d.Draw)
-                    .WithMany(p => p.Spinners)
+                    .WithMany(p => p.Spins)
                     .HasForeignKey(d => d.DrawId)
-                    .HasConstraintName("spinners_ibfk_1");
+                    .HasConstraintName("spins_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);

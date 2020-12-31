@@ -21,36 +21,36 @@ namespace PrizesService.Controllers
             _spinnersRepository = spinnersRepository;
         }
 
-        //[HttpPost]
-        //[Route("draws/{drawsId}/spin/{officerId}")]
-        //public IActionResult Post(string drawsId, string officerId, SpinnersModel spinnersModel)
-        //{
-        //    dynamic response = _spinnersRepository.InsertSpinners(drawsId, officerId, spinnersModel);
-        //    return StatusCode((int)response.statusCode, response);
-        //}
+        [HttpPost]
+        [Route("draws/{drawsId}/spins")]
+        public IActionResult Post(string drawsId, PostSpinsModel spinsModel)
+        {
+            dynamic response = _spinnersRepository.InsertSpins(drawsId, spinsModel);
+            return StatusCode((int)response.statusCode, response);
+        }
 
-        //[HttpGet]
-        //[Route("draws/{drawsId}/spin/{spinId=0}")]
-        //public IActionResult Get(string drawsId,string spinId, string include, [FromQuery] Pagination pageInfo)
-        //{
-        //    dynamic response = _spinnersRepository.GetSpinners(drawsId, spinId, include, pageInfo);
-        //    return StatusCode((int)response.statusCode, response);
-        //}
+        [HttpGet]
+        [Route("draws/{drawsId}/spins/{spinsId=0}")]
+        public IActionResult Get(string drawsId, string spinsId, string include, [FromQuery] Pagination pageInfo)
+        {
+            dynamic response = _spinnersRepository.GetSpins(drawsId, spinsId, include, pageInfo);
+            return StatusCode((int)response.statusCode, response);
+        }
 
-        //[HttpPut]
-        //[Route("draws/{drawsId}/spin/{officerId}")]
-        //public IActionResult Put(string drawsId, string officerId, SpinnersModel spinnersModel)
-        //{
-        //    dynamic response = _spinnersRepository.UpdateSpinners(drawsId, officerId, spinnersModel);
-        //    return StatusCode((int)response.statusCode, response);
-        //}
+        [HttpPut]
+        [Route("draws/{drawsId}/spins")]
+        public IActionResult Put(string drawsId, PostSpinsModel spinsModel)
+        {
+            dynamic response = _spinnersRepository.UpdateSpins(drawsId, spinsModel);
+            return StatusCode((int)response.statusCode, response);
+        }
 
-        //[HttpDelete]
-        //[Route("spin/{spinId}")]
-        //public IActionResult Delete(string spinId)
-        //{
-        //    dynamic response = _spinnersRepository.DeleteSpinners(spinId);
-        //    return StatusCode((int)response.statusCode, response);
-        //}
+        [HttpDelete]
+        [Route("spins/{spinsId}")]
+        public IActionResult Delete(string spinsId)
+        {
+            dynamic response = _spinnersRepository.DeleteSpins(spinsId);
+            return StatusCode((int)response.statusCode, response);
+        }
     }
 }
