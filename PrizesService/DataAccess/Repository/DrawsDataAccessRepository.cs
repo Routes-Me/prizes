@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PrizesService.Abstraction;
 using PrizesService.DataAccess.Abstraction;
 using PrizesService.Helper;
 using PrizesService.Models;
@@ -8,22 +7,20 @@ using PrizesService.Models.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using RoutesSecurity;
 
 namespace PrizesService.DataAccess.Repository
 {
     public class DrawsDataAccessRepository : IDrawsDataAccessRepository
     {
         private readonly prizesserviceContext _context;
-        private readonly IObfuscationRepository _obfuscationRepository;
-        public DrawsDataAccessRepository(prizesserviceContext context, IObfuscationRepository obfuscationRepository)
+        public DrawsDataAccessRepository(prizesserviceContext context)
         {
             _context = context;
-            _obfuscationRepository = obfuscationRepository;
         }
         public dynamic DeleteDraws(string drawsId)
         {
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawsId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
@@ -33,18 +30,18 @@ namespace PrizesService.DataAccess.Repository
             return ReturnResponse.SuccessResponse(CommonMessage.DrawsDelete, false);
         }
 
-        public dynamic GetDraws(string drawsId, Pagination pageInfo)
+        public dynamic GetDraws(string drawId, Pagination pageInfo)
         {
             int totalCount = 0;
             DrawsResponse response = new DrawsResponse();
             List<DrawsModel> drawsList = new List<DrawsModel>();
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
-            if (drawsIdDecrypted == 0)
+
+            if (string.IsNullOrEmpty(drawId))
             {
                 drawsList = (from draws in _context.Draws
                              select new DrawsModel()
                              {
-                                 DrawId = _obfuscationRepository.IdEncryption(draws.DrawId),
+                                 DrawId = Obfuscation.Encode(draws.DrawId),
                                  StartAt = draws.StartAt,
                                  EndAt = draws.EndAt,
                                  Name = draws.Name,
@@ -56,11 +53,12 @@ namespace PrizesService.DataAccess.Repository
             }
             else
             {
+                int drawsIdDecrypted = Obfuscation.Decode(drawId);
                 drawsList = (from draws in _context.Draws
                              where draws.DrawId == drawsIdDecrypted
                              select new DrawsModel()
                              {
-                                 DrawId = _obfuscationRepository.IdEncryption(draws.DrawId),
+                                 DrawId = Obfuscation.Encode(draws.DrawId),
                                  StartAt = draws.StartAt,
                                  EndAt = draws.EndAt,
                                  Name = draws.Name,
@@ -101,7 +99,7 @@ namespace PrizesService.DataAccess.Repository
 
         public dynamic UpdateDraws(DrawsModel drawsModel)
         {
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsModel.DrawId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawsModel.DrawId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);

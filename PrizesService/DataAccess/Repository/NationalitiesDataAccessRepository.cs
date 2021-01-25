@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PrizesService.Abstraction;
 using PrizesService.DataAccess.Abstraction;
 using PrizesService.Helper;
 using PrizesService.Models;
@@ -8,22 +7,20 @@ using PrizesService.Models.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using RoutesSecurity;
 
 namespace PrizesService.DataAccess.Repository
 {
     public class NationalitiesDataAccessRepository : INationalitiesDataAccessRepository
     {
         private readonly prizesserviceContext _context;
-        private readonly IObfuscationRepository _obfuscationRepository;
-        public NationalitiesDataAccessRepository(prizesserviceContext context, IObfuscationRepository obfuscationRepository)
+        public NationalitiesDataAccessRepository(prizesserviceContext context)
         {
             _context = context;
-            _obfuscationRepository = obfuscationRepository;
         }
         public dynamic DeleteNationalities(string nationalitiesId)
         {
-            int nationalitiesIdDecrypted = _obfuscationRepository.IdDecryption(nationalitiesId);
+            int nationalitiesIdDecrypted = Obfuscation.Decode(nationalitiesId);
             var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalitiesIdDecrypted).FirstOrDefault();
             if (nationalities == null)
                 Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
@@ -33,18 +30,17 @@ namespace PrizesService.DataAccess.Repository
             return ReturnResponse.SuccessResponse(CommonMessage.NationalitiesDelete, false);
         }
 
-        public dynamic GetNationalities(string nationalitiesId, Pagination pageInfo)
+        public dynamic GetNationalities(string nationalityId, Pagination pageInfo)
         {
             int totalCount = 0;
             NationalitiesResponse response = new NationalitiesResponse();
             List<NationalitiesModel> nationalitiesList = new List<NationalitiesModel>();
-            int nationalitiesIdDecrypted = _obfuscationRepository.IdDecryption(nationalitiesId);
-            if (nationalitiesIdDecrypted == 0)
+            if (string.IsNullOrEmpty(nationalityId))
             {
                 nationalitiesList = (from nationalities in _context.Nationalities
                                      select new NationalitiesModel()
                                      {
-                                         NationalityId = _obfuscationRepository.IdEncryption(nationalities.NationalityId),
+                                         NationalityId = Obfuscation.Encode(nationalities.NationalityId),
                                          Name = nationalities.Name,
                                      }).AsEnumerable().OrderBy(a => a.NationalityId).Skip((pageInfo.offset - 1) * pageInfo.limit).Take(pageInfo.limit).ToList();
 
@@ -52,11 +48,12 @@ namespace PrizesService.DataAccess.Repository
             }
             else
             {
+                int nationalitiesIdDecrypted = Obfuscation.Decode(nationalityId);
                 nationalitiesList = (from nationalities in _context.Nationalities
                                      where nationalities.NationalityId == nationalitiesIdDecrypted
                                      select new NationalitiesModel()
                                      {
-                                         NationalityId = _obfuscationRepository.IdEncryption(nationalities.NationalityId),
+                                         NationalityId = Obfuscation.Encode(nationalities.NationalityId),
                                          Name = nationalities.Name,
                                      }).AsEnumerable().OrderBy(a => a.NationalityId).Skip((pageInfo.offset - 1) * pageInfo.limit).Take(pageInfo.limit).ToList();
 
@@ -89,7 +86,7 @@ namespace PrizesService.DataAccess.Repository
 
         public dynamic UpdateNationalities(NationalitiesModel nationalitiesModel)
         {
-            int nationalityIdDecrypted = _obfuscationRepository.IdDecryption(nationalitiesModel.NationalityId);
+            int nationalityIdDecrypted = Obfuscation.Decode(nationalitiesModel.NationalityId);
             var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
             if (nationalities == null)
                 Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);

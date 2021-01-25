@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using PrizesService.Abstraction;
 using PrizesService.DataAccess.Abstraction;
 using PrizesService.Helper;
 using PrizesService.Models;
@@ -8,18 +7,16 @@ using PrizesService.Models.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using RoutesSecurity;
 
 namespace PrizesService.DataAccess.Repository
 {
     public class SpinnersDataAccessRepository : ISpinnersDataAccessRepository
     {
         private readonly prizesserviceContext _context;
-        private readonly IObfuscationRepository _obfuscationRepository;
-        public SpinnersDataAccessRepository(prizesserviceContext context, IObfuscationRepository obfuscationRepository)
+        public SpinnersDataAccessRepository(prizesserviceContext context)
         {
             _context = context;
-            _obfuscationRepository = obfuscationRepository;
         }
         public dynamic DeleteSpins(string spinsId)
         {
@@ -34,8 +31,8 @@ namespace PrizesService.DataAccess.Repository
 
         public dynamic InsertSpins(string drawsId, PostSpinsModel spinsModel)
         {
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
-            int officerIdDecrypted = _obfuscationRepository.IdDecryption(spinsModel.OfficerId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawsId);
+            int officerIdDecrypted = Obfuscation.Decode(spinsModel.OfficerId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);

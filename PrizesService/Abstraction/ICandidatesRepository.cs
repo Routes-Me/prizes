@@ -10,7 +10,7 @@ namespace PrizesService.Abstraction
     public interface ICandidatesRepository
     {
         dynamic InsertCandidates(string drawsId, CandidatesModel candidatesModel);
-        dynamic GetCandidates(string drawsId, string candidatesId, Pagination pageInfo);
+        dynamic GetCandidates(string drawId, string candidateId, Pagination pageInfo);
         dynamic UpdateCandidates(string drawsId, CandidatesModel candidatesModel);
         dynamic DeleteCandidates(string candidatesId);
     }

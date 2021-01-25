@@ -28,11 +28,11 @@ namespace PrizesService.Repository
             }
         }
 
-        public dynamic GetCandidates(string drawsId, string candidatesId, Pagination pageInfo)
+        public dynamic GetCandidates(string drawId, string candidateId, Pagination pageInfo)
         {
             try
             {
-                return _candidatesDataAccessRepository.GetCandidates(drawsId, candidatesId, pageInfo);
+                return _candidatesDataAccessRepository.GetCandidates(drawId, candidateId, pageInfo);
             }
             catch (Exception ex)
             {
