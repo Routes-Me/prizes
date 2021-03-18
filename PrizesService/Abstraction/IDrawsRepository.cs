@@ -10,7 +10,7 @@ namespace PrizesService.Abstraction
     public interface IDrawsRepository
     {
         dynamic InsertDraws(DrawsModel drawsModel);
-        dynamic GetDraws(string drawsId, Pagination pageInfo);
+        dynamic GetDraws(string drawId, Pagination pageInfo);
         dynamic UpdateDraws(DrawsModel drawsModel);
         dynamic DeleteDraws(string drawsId);
     }

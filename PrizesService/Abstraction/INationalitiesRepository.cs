@@ -10,7 +10,7 @@ namespace PrizesService.Abstraction
     public interface INationalitiesRepository
     {
         dynamic InsertNationalities(NationalitiesModel nationalitiesModel);
-        dynamic GetNationalities(string nationalitiesId, Pagination pageInfo);
+        dynamic GetNationalities(string nationalityId, Pagination pageInfo);
         dynamic UpdateNationalities(NationalitiesModel nationalitiesModel);
         dynamic DeleteNationalities(string nationalitiesId);
     }

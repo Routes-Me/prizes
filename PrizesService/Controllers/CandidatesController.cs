@@ -21,7 +21,7 @@ namespace PrizesService.Controllers
         }
 
         [HttpPost]
-        [Route("draws/{drawsId}/candidates")]
+        [Route("draws/{drawId}/candidates")]
         public IActionResult Post(string drawsId, CandidatesModel candidatesModel)
         {
             dynamic response = _candidatesRepository.InsertCandidates(drawsId, candidatesModel);
@@ -29,15 +29,15 @@ namespace PrizesService.Controllers
         }
 
         [HttpGet]
-        [Route("draws/{drawsId}/candidates/{candidatesId=0}")]
-        public IActionResult Get(string drawsId, string candidatesId, [FromQuery] Pagination pageInfo)
+        [Route("draws/{drawId}/candidates/{candidateId?}")]
+        public IActionResult Get(string drawId, string candidateId, [FromQuery] Pagination pageInfo)
         {
-            dynamic response = _candidatesRepository.GetCandidates(drawsId, candidatesId, pageInfo);
+            dynamic response = _candidatesRepository.GetCandidates(drawId, candidateId, pageInfo);
             return StatusCode((int)response.statusCode, response);
         }
 
         [HttpPut]
-        [Route("draws/{drawsId}/candidates")]
+        [Route("draws/{drawId}/candidates")]
         public IActionResult Put(string drawsId, CandidatesModel candidatesModel)
         {
             dynamic response = _candidatesRepository.UpdateCandidates(drawsId, candidatesModel);

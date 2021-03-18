@@ -29,10 +29,10 @@ namespace PrizesService.Controllers
         }
 
         [HttpGet]
-        [Route("draws/{drawsId=0}")]
-        public IActionResult Get(string drawsId, [FromQuery] Pagination pageInfo)
+        [Route("draws/{drawId?}")]
+        public IActionResult Get(string drawId, [FromQuery] Pagination pageInfo)
         {
-            dynamic response = _drawsRepository.GetDraws(drawsId, pageInfo);
+            dynamic response = _drawsRepository.GetDraws(drawId, pageInfo);
             return StatusCode((int)response.statusCode, response);
         }
 

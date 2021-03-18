@@ -9,21 +9,20 @@ using PrizesService.Models.ResponseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RoutesSecurity;
 
 namespace PrizesService.DataAccess.Repository
 {
     public class CandidatesDataAccessRepository : ICandidatesDataAccessRepository
     {
         private readonly prizesserviceContext _context;
-        private readonly IObfuscationRepository _obfuscationRepository;
-        public CandidatesDataAccessRepository(prizesserviceContext context, IObfuscationRepository obfuscationRepository)
+        public CandidatesDataAccessRepository(prizesserviceContext context)
         {
             _context = context;
-            _obfuscationRepository = obfuscationRepository;
         }
         public dynamic DeleteCandidates(string candidatesId)
         {
-            int candidatesIdDecrypted = _obfuscationRepository.IdDecryption(candidatesId);
+            int candidatesIdDecrypted = Obfuscation.Decode(candidatesId);
             var candidates = _context.Candidates
                 .Include(x => x.CandidatesNationalities)
                 .Include(x => x.DrawWinners)
@@ -55,25 +54,21 @@ namespace PrizesService.DataAccess.Repository
             return ReturnResponse.SuccessResponse(CommonMessage.CandidateDelete, false);
         }
 
-        public dynamic GetCandidates(string drawsId, string candidatesId, Pagination pageInfo)
+        public dynamic GetCandidates(string drawId, string candidateId, Pagination pageInfo)
         {
             int totalCount = 0;
             CandidateResponse response = new CandidateResponse();
             List<CandidatesGetModel> candidatesList = new List<CandidatesGetModel>();
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
-            var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
-            if (draws == null)
-                Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
+            int drawsIdDecrypted = Obfuscation.Decode(drawId);
 
-            int candidatesIdDecrypted = _obfuscationRepository.IdDecryption(candidatesId);
-            if (candidatesIdDecrypted == 0)
+            if (string.IsNullOrEmpty(candidateId))
             {
                 candidatesList = (from candidates in _context.Candidates
                                   join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                                   where drawsCandidates.DrawId == drawsIdDecrypted
                                   select new CandidatesGetModel()
                                   {
-                                      CandidateId = _obfuscationRepository.IdEncryption(candidates.CandidateId),
+                                      CandidateId = Obfuscation.Encode(candidates.CandidateId),
                                       Name = candidates.Name,
                                       Email = candidates.Email,
                                       DateOfBirth = candidates.DateOfBirth,
@@ -89,12 +84,13 @@ namespace PrizesService.DataAccess.Repository
             }
             else
             {
+                int candidatesIdDecrypted = Obfuscation.Decode(candidateId);
                 candidatesList = (from candidates in _context.Candidates
                                   join drawsCandidates in _context.DrawsCandidates on candidates.CandidateId equals drawsCandidates.CandidateId
                                   where drawsCandidates.DrawId == drawsIdDecrypted && candidates.CandidateId == candidatesIdDecrypted
                                   select new CandidatesGetModel()
                                   {
-                                      CandidateId = _obfuscationRepository.IdEncryption(candidates.CandidateId),
+                                      CandidateId = Obfuscation.Encode(candidates.CandidateId),
                                       Name = candidates.Name,
                                       Email = candidates.Email,
                                       DateOfBirth = candidates.DateOfBirth,
@@ -126,12 +122,12 @@ namespace PrizesService.DataAccess.Repository
 
         public dynamic InsertCandidates(string drawsId, CandidatesModel candidatesModel)
         {
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawsId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
 
-            int nationalityIdDecrypted = _obfuscationRepository.IdDecryption(candidatesModel.NationalityId);
+            int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
             var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
             if (nationalities == null)
                 Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
@@ -162,17 +158,17 @@ namespace PrizesService.DataAccess.Repository
 
         public dynamic UpdateCandidates(string drawsId, CandidatesModel candidatesModel)
         {
-            int drawsIdDecrypted = _obfuscationRepository.IdDecryption(drawsId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawsId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
 
-            int candidatesIdDecrypted = _obfuscationRepository.IdDecryption(candidatesModel.CandidateId);
+            int candidatesIdDecrypted = Obfuscation.Decode(candidatesModel.CandidateId);
             var candidates = _context.Candidates.Where(x => x.CandidateId == candidatesIdDecrypted).FirstOrDefault();
             if (candidates == null)
                 Common.ThrowException(CommonMessage.CandidateNotFound, StatusCodes.Status404NotFound);
 
-            int nationalityIdDecrypted = _obfuscationRepository.IdDecryption(candidatesModel.NationalityId);
+            int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
             var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
             if (nationalities == null)
                 Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);

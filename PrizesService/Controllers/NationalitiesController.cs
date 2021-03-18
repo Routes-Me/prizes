@@ -29,10 +29,10 @@ namespace PrizesService.Controllers
         }
 
         [HttpGet]
-        [Route("nationalities/{nationalitiesId=0}")]
-        public IActionResult Get( string nationalitiesId, [FromQuery] Pagination pageInfo)
+        [Route("nationalities/{nationalityId?}")]
+        public IActionResult Get( string nationalityId, [FromQuery] Pagination pageInfo)
         {
-            dynamic response = _nationalitiesRepository.GetNationalities(nationalitiesId, pageInfo);
+            dynamic response = _nationalitiesRepository.GetNationalities(nationalityId, pageInfo);
             return StatusCode((int)response.statusCode, response);
         }
 

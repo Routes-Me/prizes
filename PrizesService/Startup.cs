@@ -123,7 +123,6 @@ namespace PrizesService
             services.AddScoped<ICandidatesRepository, CandidatesRepository>();
             services.AddScoped<IDrawsRepository, DrawsRepository>();
             services.AddScoped<INationalitiesRepository, NationalitiesRepository>();
-            services.AddScoped<IObfuscationRepository, ObfuscationRepository>();
             services.AddScoped<ISpinnersRepository, SpinnersRepository>();
 
             //Data Access Services
