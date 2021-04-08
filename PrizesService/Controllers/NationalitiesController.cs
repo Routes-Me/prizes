@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PrizesService.Abstraction;
 using PrizesService.Models;
 using PrizesService.Models.ResponseModel;
 
 namespace PrizesService.Controllers
 {
-    [Route("api")]
     [ApiController]
+    [ApiVersion( "1.0" )]
+    [Route("v{version:apiVersion}/")]
     public class NationalitiesController : ControllerBase
     {
         private readonly INationalitiesRepository  _nationalitiesRepository;
