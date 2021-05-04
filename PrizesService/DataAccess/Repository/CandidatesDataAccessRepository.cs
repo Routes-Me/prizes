@@ -128,9 +128,6 @@ namespace PrizesService.DataAccess.Repository
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
 
             int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
-            if (nationalities == null)
-                Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 
             Candidates candidates = new Candidates();
             candidates.Name = candidatesModel.Name;
@@ -169,9 +166,6 @@ namespace PrizesService.DataAccess.Repository
                 Common.ThrowException(CommonMessage.CandidateNotFound, StatusCodes.Status404NotFound);
 
             int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
-            if (nationalities == null)
-                Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 
             var drawsCandidatesData = _context.DrawsCandidates.Where(x => x.CandidateId == candidatesIdDecrypted && x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (drawsCandidatesData == null)

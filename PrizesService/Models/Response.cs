@@ -66,12 +66,6 @@ namespace PrizesService.Models
         public List<CandidatesGetModel> data { get; set; }
     }
 
-    public class NationalitiesResponse : Response
-    {
-        public Pagination pagination { get; set; }
-        public List<NationalitiesModel> data { get; set; }
-    }
-
     public class DrawsResponse : Response
     {
         public Pagination pagination { get; set; }
