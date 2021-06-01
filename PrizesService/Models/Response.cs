@@ -69,7 +69,7 @@ namespace PrizesService.Models
     public class NationalitiesResponse : Response
     {
         public Pagination pagination { get; set; }
-        public List<NationalitiesModel> data { get; set; }
+        public List<NationalitiesDto> data { get; set; }
     }
 
     public class DrawsResponse : Response
