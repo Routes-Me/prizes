@@ -11,7 +11,7 @@ namespace PrizesService.DataAccess.Abstraction
     {
         dynamic DeleteCandidates(string candidatesId);
         dynamic GetCandidates(string drawsId, string candidatesId, Pagination pageInfo);
-        dynamic InsertCandidates(string drawsId, CandidatesModel candidatesModel);
+        dynamic InsertCandidates(string drawId, CandidatesModel candidatesModel);
         dynamic UpdateCandidates(string drawsId, CandidatesModel candidatesModel);
     }
 }

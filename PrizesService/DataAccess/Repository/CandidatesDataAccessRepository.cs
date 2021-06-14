@@ -120,17 +120,12 @@ namespace PrizesService.DataAccess.Repository
         }
 
 
-        public dynamic InsertCandidates(string drawsId, CandidatesModel candidatesModel)
+        public dynamic InsertCandidates(string drawId, CandidatesModel candidatesModel)
         {
-            int drawsIdDecrypted = Obfuscation.Decode(drawsId);
+            int drawsIdDecrypted = Obfuscation.Decode(drawId);
             var draws = _context.Draws.Where(x => x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
-
-            int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
-            if (nationalities == null)
-                Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 
             Candidates candidates = new Candidates();
             candidates.Name = candidatesModel.Name;
@@ -150,7 +145,7 @@ namespace PrizesService.DataAccess.Repository
 
             CandidatesNationalities candidatesNationalities = new CandidatesNationalities();
             candidatesNationalities.CandidateId = candidates.CandidateId;
-            candidatesNationalities.NationalityId = nationalityIdDecrypted;
+            candidatesNationalities.NationalityId = Obfuscation.Decode(candidatesModel.NationalityId);
             _context.CandidatesNationalities.Add(candidatesNationalities);
             _context.SaveChanges();
             return ReturnResponse.SuccessResponse(CommonMessage.CandidateInsert, true);
@@ -169,9 +164,6 @@ namespace PrizesService.DataAccess.Repository
                 Common.ThrowException(CommonMessage.CandidateNotFound, StatusCodes.Status404NotFound);
 
             int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
-            if (nationalities == null)
-                Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 
             var drawsCandidatesData = _context.DrawsCandidates.Where(x => x.CandidateId == candidatesIdDecrypted && x.DrawId == drawsIdDecrypted).FirstOrDefault();
             if (drawsCandidatesData == null)

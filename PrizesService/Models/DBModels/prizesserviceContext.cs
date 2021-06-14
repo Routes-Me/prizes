@@ -20,7 +20,6 @@ namespace PrizesService.Models.DBModels
         public virtual DbSet<DrawWinners> DrawWinners { get; set; }
         public virtual DbSet<Draws> Draws { get; set; }
         public virtual DbSet<DrawsCandidates> DrawsCandidates { get; set; }
-        public virtual DbSet<Nationalities> Nationalities { get; set; }
         public virtual DbSet<Spins> Spins { get; set; }
 
   
@@ -82,12 +81,6 @@ namespace PrizesService.Models.DBModels
                     .HasForeignKey(d => d.CandidateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("candidates_nationalities_ibfk_1");
-
-                entity.HasOne(d => d.Nationality)
-                    .WithMany(p => p.CandidatesNationalities)
-                    .HasForeignKey(d => d.NationalityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("candidates_nationalities_ibfk_2");
             });
 
             modelBuilder.Entity<DrawWinners>(entity =>
@@ -188,22 +181,6 @@ namespace PrizesService.Models.DBModels
                     .HasForeignKey(d => d.DrawId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("draws_candidates_ibfk_1");
-            });
-
-            modelBuilder.Entity<Nationalities>(entity =>
-            {
-                entity.HasKey(e => e.NationalityId)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("nationalities");
-
-                entity.Property(e => e.NationalityId).HasColumnName("nationality_id");
-
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
-                    .HasColumnType("varchar(255)")
-                    .HasCharSet("utf8mb4")
-                    .HasCollation("utf8mb4_0900_ai_ci");
             });
 
             modelBuilder.Entity<Spins>(entity =>

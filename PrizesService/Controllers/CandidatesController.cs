@@ -18,10 +18,10 @@ namespace PrizesService.Controllers
 
         [HttpPost]
         [Route("draws/{drawId}/candidates")]
-        public IActionResult Post(string drawsId, CandidatesModel candidatesModel)
+        public IActionResult Post(string drawId, CandidatesModel candidatesModel)
         {
-            dynamic response = _candidatesRepository.InsertCandidates(drawsId, candidatesModel);
-            return StatusCode((int)response.statusCode, response);
+            dynamic response = _candidatesRepository.InsertCandidates(drawId, candidatesModel);
+            return StatusCode(response.statusCode, response);
         }
 
         [HttpGet]

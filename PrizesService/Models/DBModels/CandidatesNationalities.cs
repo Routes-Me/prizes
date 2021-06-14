@@ -9,6 +9,5 @@ namespace PrizesService.Models.DBModels
         public int NationalityId { get; set; }
 
         public virtual Candidates Candidate { get; set; }
-        public virtual Nationalities Nationality { get; set; }
     }
 }

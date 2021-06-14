@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PrizesService.Models.ResponseModel
 {
-    public class NationalitiesModel
+    public class NationalitiesDto
     {
         public string NationalityId { get; set; }
         public string Name { get; set; }
