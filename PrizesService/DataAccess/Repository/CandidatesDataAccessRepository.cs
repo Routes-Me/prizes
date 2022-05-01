@@ -127,10 +127,10 @@ namespace PrizesService.DataAccess.Repository
             if (draws == null)
                 Common.ThrowException(CommonMessage.DrawsNotFound, StatusCodes.Status404NotFound);
 
-            int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
-            var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
-            if (nationalities == null)
-                Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
+            // int nationalityIdDecrypted = Obfuscation.Decode(candidatesModel.NationalityId);
+            // var nationalities = _context.Nationalities.Where(x => x.NationalityId == nationalityIdDecrypted).FirstOrDefault();
+            // if (nationalities == null)
+            //     Common.ThrowException(CommonMessage.NationalitiesNotFound, StatusCodes.Status404NotFound);
 
             Candidates candidates = new Candidates();
             candidates.Name = candidatesModel.Name;
@@ -148,11 +148,11 @@ namespace PrizesService.DataAccess.Repository
             _context.DrawsCandidates.Add(drawsCandidates);
             _context.SaveChanges();
 
-            CandidatesNationalities candidatesNationalities = new CandidatesNationalities();
-            candidatesNationalities.CandidateId = candidates.CandidateId;
-            candidatesNationalities.NationalityId = nationalityIdDecrypted;
-            _context.CandidatesNationalities.Add(candidatesNationalities);
-            _context.SaveChanges();
+            // CandidatesNationalities candidatesNationalities = new CandidatesNationalities();
+            // candidatesNationalities.CandidateId = candidates.CandidateId;
+            // candidatesNationalities.NationalityId = nationalityIdDecrypted;
+            // _context.CandidatesNationalities.Add(candidatesNationalities);
+            // _context.SaveChanges();
             return ReturnResponse.SuccessResponse(CommonMessage.CandidateInsert, true);
         }
 
